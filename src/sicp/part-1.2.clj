@@ -47,15 +47,16 @@
 
 ;; ex.  1.12
 (defn get-new-line 
-      [prev-line]
-      (loop [previous prev-line
-             current [1]]
-             (if (= 1 (count previous))
-                 (conj current 1) 
-                 (recur (rest previous)
-                        (conj current (+ 
-                                        (first previous) 
-                                        (second previous)))))))
+  [prev-line]
+  (loop [previous prev-line
+         current [1]]
+    (if (= 1 (count previous))
+        (conj current 1) 
+        (recur (rest previous)
+               (conj 
+                 current 
+                 (+ (first previous) 
+                    (second previous)))))))
 
 (defn pascal-triangle 
   ;; assuming depth >= 2
@@ -63,7 +64,24 @@
    (pascal-triangle [[1] [1 1]] (- depth 2)))
   ([lines depth] 
    (if (= depth 0)
-       lines
-       (pascal-triangle (conj lines (get-new-line (last lines))) (dec depth)))))
+       (print-triangle lines)
+       (pascal-triangle 
+         (conj lines 
+               (get-new-line (last lines))) 
+         (dec depth)))))
 
-(println (pascal-triangle 4))
+;; formatting functions
+(defn get-print-line 
+  [lines-count line-index line]
+  (let [spaces-before (- lines-count line-index)]
+    (str 
+      (apply str (repeat spaces-before " "))
+      (clojure.string/join " " line))))
+
+(defn print-triangle
+  [lines]
+  (clojure.string/join 
+    "\n" 
+    (map-indexed 
+      (partial get-print-line (count lines)) 
+      lines)))
