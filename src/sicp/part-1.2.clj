@@ -1,4 +1,4 @@
-;; 1.2.2. Fibonacci example
+;;  Fibonacci example
 
 (defn fib-recur [n] 
   (case n
@@ -15,7 +15,7 @@
         b
         (fib-iter b (+ a b) (dec n)))))
 
-;; 1.2.2. Tree recursion. Coin exchange example
+;; Tree recursion. Coin exchange example
 
 (def coins [1 2 5 10 50])
 
@@ -38,9 +38,32 @@
          (f-recur (- n 3)))))
 
 (defn f-iter 
-  ([n] (f-iter 0 1 2 n)
+  ([n] (f-iter 0 1 2 n))
   ([a b c n] 
+   ;; assuming n >= 3
    (if (= n 0)
        c
-       (f-iter a b (+ a b c) (dec n))))))
+       (f-iter a b (+ a b c) (dec n)))))
 
+;; ex.  1.12
+(defn get-new-line 
+      [prev-line]
+      (loop [previous prev-line
+             current [1]]
+             (if (= 1 (count previous))
+                 (conj current 1) 
+                 (recur (rest previous)
+                        (conj current (+ 
+                                        (first previous) 
+                                        (second previous)))))))
+
+(defn pascal-triangle 
+  ;; assuming depth >= 2
+  ([depth] 
+   (pascal-triangle [[1] [1 1]] (- depth 2)))
+  ([lines depth] 
+   (if (= depth 0)
+       lines
+       (pascal-triangle (conj lines (get-new-line (last lines))) (dec depth)))))
+
+(println (pascal-triangle 4))
